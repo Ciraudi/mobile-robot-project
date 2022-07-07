@@ -1,0 +1,11 @@
+<launch>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="simulation" value="true"/>
+
+    <include file="$(find map2gazebo)/launch/turtlebot3_world.launch" if="$(arg simulation)" />
+
+
+    <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
+        <arg name="map_file" value="$(find final_project)/maps/map6.yaml" />
+    </include>  
+</launch>

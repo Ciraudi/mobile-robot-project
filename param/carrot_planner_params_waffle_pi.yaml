@@ -1,0 +1,4 @@
+CarrotPlanner:
+
+  step_size: 0.050000
+  min_dist_from_robot: 0.10

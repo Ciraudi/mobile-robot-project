@@ -1,0 +1,4 @@
+<launch>
+    <arg name="use_sim_time" value="True"/>
+    <node pkg="final_project" type="main.py" name="main" output="screen"/>
+</launch>

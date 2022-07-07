@@ -1,0 +1,134 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="cmd_vel_topic" default="/cmd_vel" />
+  <arg name="odom_topic" default="odom" />
+  <arg name="move_forward_only" default="false"/>
+  <arg name="local_planner" default="base"/>
+  <arg name="global_planner" default="base"/>
+
+
+  <!-- Global Planner Base -->
+  <group if="$(eval global_planner == 'base')">
+    <!-- Base Local Planner -->
+    <group if="$(eval local_planner == 'base')">
+      <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+        <rosparam file="$(find final_project)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
+        <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+        <param name="DWAPlannerROS/yaw_goal_tolerance" value="6.28" />
+        
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <rosparam file="$(find final_project)/param/global_planner_params_waffle_pi.yaml" command="load" />
+        <param name="GlobalPlanner/orientation_mode " value="2" />
+        <param name="GlobalPlanner/use_quadratic " value="false" />
+        <param name="GlobalPlanner/cost_factor " value="0.55" />
+
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find final_project)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/move_base_params.yaml" command="load" />
+        <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+        <remap from="odom" to="$(arg odom_topic)"/>
+      </node>
+    </group>
+    <!-- Teb Local Planner -->
+    <group if="$(eval local_planner == 'teb')">
+      <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    
+        <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+        <rosparam file="$(find final_project)/param/teb_local_planner_params.yaml" command="load" />
+        <param name="TebLocalPlannerROS/map_frame" value="/map" />
+        <param name="TebLocalPlannerROS/xy_goal_tolerance" value="0.15" />
+        <param name="TebLocalPlannerROS/yaw_goal_tolerance" value="6.28" />
+        <param name="TebLocalPlannerROS/max_vel_x" value="0.26" />
+        <param name="TebLocalPlannerROS/max_vel_x_backwards" value="0.26" />
+        <param name="TebLocalPlannerROS/max_vel_theta" value="1.82" />
+        <param name="TebLocalPlannerROS/acc_lim_x" value="2.5" />
+        <param name="TebLocalPlannerROS/acc_lim_theta" value="3.2" />
+        <param name="TebLocalPlannerROS/min_obstacle_dist" value="0.25" />
+        <param name="TebLocalPlannerROS/global_plan_overwrite_orientation" value="false" />
+        <param name="TebLocalPlannerROS/global_plan_viapoint_sep " value="0.5" />
+
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <rosparam file="$(find final_project)/param/global_planner_params_waffle_pi.yaml" command="load" />
+        <param name="GlobalPlanner/orientation_mode " value="2" />
+        <param name="GlobalPlanner/use_quadratic " value="false" />
+        <param name="GlobalPlanner/cost_factor " value="0.55" />
+
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find final_project)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/move_base_params.yaml" command="load" />
+        <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+        <remap from="odom" to="$(arg odom_topic)"/>
+      </node>
+    </group>
+
+  </group>
+
+
+  <!--  Global Planner Carrot-->
+  <group if="$(eval global_planner == 'carrot')">
+    <!-- Base Local Planner -->
+    <group if="$(eval local_planner == 'base')">
+      <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+        <rosparam file="$(find final_project)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
+        <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+        <param name="DWAPlannerROS/yaw_goal_tolerance" value="6.28" />
+
+        <param name="base_global_planner" value="carrot_planner/CarrotPlanner"/>
+
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find final_project)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/move_base_params.yaml" command="load" />
+        <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+        <remap from="odom" to="$(arg odom_topic)"/>
+      </node>
+    </group>
+    <!-- Teb Local Planner -->
+    <group if="$(eval local_planner == 'teb')">
+      <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+
+        <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+        <rosparam file="$(find final_project)/param/teb_local_planner_params.yaml" command="load" />
+        <param name="TebLocalPlannerROS/map_frame" value="/map" />
+        <param name="TebLocalPlannerROS/xy_goal_tolerance" value="0.15" />
+        <param name="TebLocalPlannerROS/yaw_goal_tolerance" value="6.28" />
+        <param name="TebLocalPlannerROS/max_vel_x" value="0.26" />
+        <param name="TebLocalPlannerROS/max_vel_x_backwards" value="0.26" />
+        <param name="TebLocalPlannerROS/max_vel_theta" value="1.82" />
+        <param name="TebLocalPlannerROS/acc_lim_x" value="2.5" />
+        <param name="TebLocalPlannerROS/acc_lim_theta" value="3.2" />
+        <param name="TebLocalPlannerROS/min_obstacle_dist" value="0.25" />
+        <param name="TebLocalPlannerROS/global_plan_overwrite_orientation" value="false" />
+        <param name="TebLocalPlannerROS/global_plan_viapoint_sep " value="0.5" />
+
+        <param name="base_global_planner" value="carrot_planner/CarrotPlanner"/>
+
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find final_project)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find final_project)/param/move_base_params.yaml" command="load" />
+
+        <param name="TebLocalPlannerROS/xy_goal_tolerance" value="0.20" />
+
+        <rosparam file="$(find final_project)/param/carrot_planner_params_waffle_pi.yaml" command="load" />
+        <param name="CarrotPlanner/step_size" value="0.20" />
+
+        <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+        <remap from="odom" to="$(arg odom_topic)"/>
+      </node>
+    </group>
+    
+  </group>
+
+</launch>
