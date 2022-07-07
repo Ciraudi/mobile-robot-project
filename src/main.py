@@ -82,15 +82,15 @@ def main():
     index = 0
 
     # SETUP PHASE
-    while not goal_is_reached((path[index][0],path[index][1]), pose_listener.get_pose()):
+    while not goal_is_reached((path[index][0],path[index][1]), pose_listener.get_pose()):   # make sure of that the turtlebot arrived at starting point
         pass
     print(f"Starting position reached")
-    index = 1
+    index = 1   # the first point after the starting point
     service = "/move_base/clear_costmaps"
     rospy.wait_for_service(service)
     clear_cost_map_service = rospy.ServiceProxy(service, Empty)
-    clear_cost_map_service()
-    wait_user_input()
+    clear_cost_map_service()    # service to clear the costmap
+    wait_user_input()           # wait input for start the time trial
     start_time = rospy.get_time()
 
     # AUTONOMOUS NAVIGATION PHASE
@@ -101,14 +101,12 @@ def main():
             break
         
         goal.target_pose.header.stamp = rospy.Time.now()
-        goal.target_pose.pose.position.x = path[index][0]
-        goal.target_pose.pose.position.y = path[index][1]
+        goal.target_pose.pose.position.x = path[index][0]   # x coordinate of index point
+        goal.target_pose.pose.position.y = path[index][1]   # y coordinate of index point
 
         if GOAL_MODE == 2:
             if index <= len(path)-2:
                 quaternion = get_goal_quaternion(path[index][0], path[index][1], path[index+1][0], path[index+1][1])
-                # quaternion = get_goal_quaternion(path[index][0], path[index][1], path[index+1][0], path[index+1][1])
-
             else:
                 quaternion = get_goal_quaternion(path[index-1][0], path[index-1][1], path[index][0], path[index][1])
         elif GOAL_MODE == 1:
