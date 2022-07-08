@@ -2,6 +2,10 @@ scan_filter_chain:
 - name: scan_range
   type: laser_filters/LaserScanRangeFilter
   params:
-    upper_threshold: 3.5
     use_message_range_limits: false
+    # laser filtering in real life testing
+    lower_threshold: 0.1
+    lower_replacement_value: 3.4
+    # laser filtering in simulations testing
+    upper_threshold: 3.5
     upper_replacement_value: 3.4
