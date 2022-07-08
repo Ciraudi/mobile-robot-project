@@ -54,8 +54,9 @@
 
         <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
         <rosparam file="$(find final_project)/param/global_planner_params_waffle_pi.yaml" command="load" />
-        <param name="GlobalPlanner/orientation_mode " value="2" />
-        <param name="GlobalPlanner/use_quadratic " value="false" />
+        <param name="GlobalPlanner/old_navfn_behavior" value="true" />
+        <!-- <param name="GlobalPlanner/orientation_mode " value="2" />
+        <param name="GlobalPlanner/use_quadratic " value="false" /> -->
         <param name="GlobalPlanner/cost_factor " value="0.55" />
 
         <rosparam file="$(find final_project)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
